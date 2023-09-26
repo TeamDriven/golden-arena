@@ -5,7 +5,7 @@ package web
 
 import (
 	"fmt"
-	"github.com/Team254/cheesy-arena-lite/model"
+	"github.com/FRCTeam1987Offseason/crimson-arena/model"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"

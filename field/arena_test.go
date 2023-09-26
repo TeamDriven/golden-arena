@@ -4,9 +4,9 @@
 package field
 
 import (
-	"github.com/Team254/cheesy-arena-lite/game"
-	"github.com/Team254/cheesy-arena-lite/model"
-	"github.com/Team254/cheesy-arena-lite/tournament"
+	"github.com/FRCTeam1987Offseason/crimson-arena/game"
+	"github.com/FRCTeam1987Offseason/crimson-arena/model"
+	"github.com/FRCTeam1987Offseason/crimson-arena/tournament"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

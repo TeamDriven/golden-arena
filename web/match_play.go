@@ -7,12 +7,12 @@ package web
 
 import (
 	"fmt"
-	"github.com/Team254/cheesy-arena-lite/bracket"
-	"github.com/Team254/cheesy-arena-lite/field"
-	"github.com/Team254/cheesy-arena-lite/game"
-	"github.com/Team254/cheesy-arena-lite/model"
-	"github.com/Team254/cheesy-arena-lite/tournament"
-	"github.com/Team254/cheesy-arena-lite/websocket"
+	"github.com/FRCTeam1987Offseason/crimson-arena/bracket"
+	"github.com/FRCTeam1987Offseason/crimson-arena/field"
+	"github.com/FRCTeam1987Offseason/crimson-arena/game"
+	"github.com/FRCTeam1987Offseason/crimson-arena/model"
+	"github.com/FRCTeam1987Offseason/crimson-arena/tournament"
+	"github.com/FRCTeam1987Offseason/crimson-arena/websocket"
 	"github.com/gorilla/mux"
 	"github.com/mitchellh/mapstructure"
 	"io"

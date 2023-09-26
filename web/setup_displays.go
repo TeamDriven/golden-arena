@@ -7,9 +7,9 @@ package web
 
 import (
 	"fmt"
-	"github.com/Team254/cheesy-arena-lite/field"
-	"github.com/Team254/cheesy-arena-lite/model"
-	"github.com/Team254/cheesy-arena-lite/websocket"
+	"github.com/FRCTeam1987Offseason/crimson-arena/field"
+	"github.com/FRCTeam1987Offseason/crimson-arena/model"
+	"github.com/FRCTeam1987Offseason/crimson-arena/websocket"
 	"github.com/mitchellh/mapstructure"
 	"io"
 	"log"

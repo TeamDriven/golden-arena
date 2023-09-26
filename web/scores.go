@@ -53,8 +53,8 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/Team254/cheesy-arena-lite/field"
-	"github.com/Team254/cheesy-arena-lite/game"
+	"github.com/FRCTeam1987Offseason/crimson-arena/field"
+	"github.com/FRCTeam1987Offseason/crimson-arena/game"
 	"io/ioutil"
 	"net/http"
 )

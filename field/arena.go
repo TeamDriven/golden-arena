@@ -7,12 +7,12 @@ package field
 
 import (
 	"fmt"
-	"github.com/Team254/cheesy-arena-lite/bracket"
-	"github.com/Team254/cheesy-arena-lite/game"
-	"github.com/Team254/cheesy-arena-lite/model"
-	"github.com/Team254/cheesy-arena-lite/network"
-	"github.com/Team254/cheesy-arena-lite/partner"
-	"github.com/Team254/cheesy-arena-lite/plc"
+	"github.com/FRCTeam1987Offseason/crimson-arena/bracket"
+	"github.com/FRCTeam1987Offseason/crimson-arena/game"
+	"github.com/FRCTeam1987Offseason/crimson-arena/model"
+	"github.com/FRCTeam1987Offseason/crimson-arena/network"
+	"github.com/FRCTeam1987Offseason/crimson-arena/partner"
+	"github.com/FRCTeam1987Offseason/crimson-arena/plc"
 	"log"
 	"time"
 )

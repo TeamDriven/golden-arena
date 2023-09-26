@@ -4,7 +4,7 @@
 package web
 
 import (
-	"github.com/Team254/cheesy-arena-lite/websocket"
+	"github.com/FRCTeam1987Offseason/crimson-arena/websocket"
 	gorillawebsocket "github.com/gorilla/websocket"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -15,7 +15,7 @@ func TestTwitchDisplay(t *testing.T) {
 
 	recorder := web.getHttpResponse("/displays/twitch?displayId=1&channel=team254")
 	assert.Equal(t, 200, recorder.Code)
-	assert.Contains(t, recorder.Body.String(), "Twitch Stream Display - Untitled Event - Cheesy Arena")
+	assert.Contains(t, recorder.Body.String(), "Twitch Stream Display - Untitled Event - Crimson Arena")
 }
 
 func TestTwitchDisplayWebsocket(t *testing.T) {

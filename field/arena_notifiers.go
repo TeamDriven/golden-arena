@@ -6,11 +6,11 @@
 package field
 
 import (
-	"github.com/Team254/cheesy-arena-lite/bracket"
-	"github.com/Team254/cheesy-arena-lite/game"
-	"github.com/Team254/cheesy-arena-lite/model"
-	"github.com/Team254/cheesy-arena-lite/network"
-	"github.com/Team254/cheesy-arena-lite/websocket"
+	"github.com/FRCTeam1987Offseason/crimson-arena/bracket"
+	"github.com/FRCTeam1987Offseason/crimson-arena/game"
+	"github.com/FRCTeam1987Offseason/crimson-arena/model"
+	"github.com/FRCTeam1987Offseason/crimson-arena/network"
+	"github.com/FRCTeam1987Offseason/crimson-arena/websocket"
 	"strconv"
 )
 
