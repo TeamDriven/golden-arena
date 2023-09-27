@@ -3,7 +3,7 @@
 *.a
 *.so
 crimson-arena
-crimson-arena.zip
+crimson-arena*.zip
 
 # Folders
 _obj

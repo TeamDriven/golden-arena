@@ -128,7 +128,7 @@ func NewArena(dbPath string) (*Arena, error) {
 	arena.AudienceDisplayMode = "blank"
 	arena.SavedMatch = &model.Match{}
 	arena.SavedMatchResult = model.NewMatchResult()
-	arena.AllianceStationDisplayMode = "match"
+	arena.AllianceStationDisplayMode = "logo"
 
 	// Initialize field lights controller
 	arena.FieldLights = NewLights()
