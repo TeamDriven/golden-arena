@@ -140,6 +140,8 @@
         </button>
       </a>
     </div>
+    <div id="matchStartReason" class="alert alert-danger"></div>
+    <br />
     <div class="row">
       <div class="col-lg-12 well">
         <div class="col-lg-3">
@@ -208,6 +210,17 @@
             {{end}}
           </p>
         {{end}}
+        <div class="row">
+          <div class="col-lg-3 col-lg-offset-1">
+            <div class="scc-indicator" id="blueSccStatus">B</div>
+          </div>
+          <div class="col-lg-3">
+            <div class="scc-indicator" id="scoringSccStatus">S</div>
+          </div>
+          <div class="col-lg-3">
+            <div class="scc-indicator" id="redSccStatus">R</div>
+          </div>
+        </div>
         </div>
         <div class="col-lg-3">
           Audience Display
@@ -234,6 +247,7 @@
             </div>
             <div class="radio">
               <label>
+                <input type="radio" name="audienceDisplay" value="logo" onclick="setAudienceDisplay();">Logo
                 <input type="radio" name="audienceDisplay" value="bracket" onclick="setAudienceDisplay();">Bracket
               </label>
             </div>
@@ -316,6 +330,24 @@
           <button type="button" id="startTimeout" class="btn btn-info btn-xs" onclick="startTimeout();">
             Start
           </button>
+          <br/>
+          <br/>
+          <p>Field Lights</p>
+          <div class="radio">
+            <label>
+              <input type="radio" name="fieldLights" value="off" onclick="setFieldLights();"/>Off
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio" name="fieldLights" value="purple" onclick="setFieldLights();"/>Cleanup (Purple)
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio" name="fieldLights" value="green" onclick="setFieldLights();"/>Reset (Green)
+            </label>
+          </div>
           {{if eq .Match.Type "test" }}
             <br /><br />
             <p>Match Name</p>

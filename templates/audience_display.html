@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="/static/css/audience_display.css" />
   </head>
   <body>
+    <div id="slideshow" class="carousel carousel-fade slide">
+      <div class="carousel-inner" id="slideshowContainer">
+      </div>
+    </div>
     <div id="overlayCentering">
       <div id="matchOverlayContainer">
         <div class="elim-alliance" id="leftElimAlliance"></div>
@@ -69,7 +73,8 @@
         <div class="blindsCenter blank"></div>
       </div>
       <div class="blindsCenter full">
-        <img id="blindsLogo" src="/static/img/lower-third-logo.png" alt="logo" />
+        <img id="blindsLogo" src="/static/img/broncobots.svg" alt="logo" />
+        <h1 style="position:relative;top:1.3em;font-weight:bold;font-family:Rockwell,serif">Broncobots</h1>
       </div>
       <div id="finalScore">
         <div class="final-score reversible-left" id="leftFinalScore"></div>
@@ -141,12 +146,19 @@
         {{"{{/each}}"}}
       </table>
     </script>
+    <script id="slideshowTemplate" type="text/x-handlebars-template">
+      <div class="item{{"{{#if First}}"}} active{{"{{/if}}"}}" data-interval="15000"}}">
+        <div class="slideshow-image-container">
+          <img src="/static/img/slideshow/{{"{{Image}}"}}" />
+        </div>
+      </div>
+    </script>
     <script id="sponsorImageTemplate" type="text/x-handlebars-template">
       <div class="item{{"{{#if First}}"}} active{{"{{/if}}"}}" data-interval="{{"{{DisplayTimeMs}}"}}">
         <div class="sponsor-image-container">
           <img src="/static/img/sponsors/{{"{{Image}}"}}" />
         </div>
-        <h1>{{"{{Subtitle}}"}}</h1>
+        <h1 {{"{{#if First}}"}}style="background-color:transparent;color:black"{{"{{/if}}"}}>{{"{{Subtitle}}"}}</h1>
       </div>
     </script>
     <script id="sponsorTextTemplate" type="text/x-handlebars-template">

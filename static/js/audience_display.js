@@ -17,6 +17,7 @@ var overlayCenteringShowParams;
 var allianceSelectionTemplate = Handlebars.compile($("#allianceSelectionTemplate").html());
 var sponsorImageTemplate = Handlebars.compile($("#sponsorImageTemplate").html());
 var sponsorTextTemplate = Handlebars.compile($("#sponsorTextTemplate").html());
+var slideshowTemplate = Handlebars.compile($("#slideshowTemplate").html());
 
 // Constants for overlay positioning. The CSS is the source of truth for the values that represent initial state.
 const overlayCenteringTopUp = "-130px";
@@ -585,7 +586,7 @@ var initializeSponsorDisplay = function() {
       if (slide.Image) {
         slideHtml = sponsorImageTemplate(slide);
       } else {
-        slideHtml = sponsorTextTemplate(slide);
+        slideHtml = sponsorTextTemplate(slide).replaceAll("&lt;br&gt;", "<br>");
       }
       $("#sponsorContainer").append(slideHtml);
     });
@@ -613,6 +614,35 @@ var initializeSponsorDisplay = function() {
 
   });
 };
+
+// Loads slideshow slide data and builds the slideshow HTML.
+var initializeSlideshow = function() {
+  $.getJSON("/api/slideshow_slides", function(slides) {
+    $("#slideshowContainer").empty();
+
+    // Inject the HTML for each slide into the DOM.
+    slides.forEach(function(_slide, i) {
+      var slide = {
+        First: i === 0,
+        Image: _slide
+      };
+      console.log(i)
+      console.log(slide)
+
+      $("#slideshowContainer").append(slideshowTemplate(slide));
+    });
+  });
+
+    // Start Carousel
+    var t = setTimeout("$('.carousel#slideshow').carousel({interval: 1000});", 14000);
+
+    $('.carousel#slideshow').on('slid.bs.carousel', function () {
+      clearTimeout(t);
+
+      $('.carousel#slideshow').carousel('pause');
+      t = setTimeout("$('.carousel#slideshow').carousel();", 14000);
+    });
+}
 
 var getAvatarUrl = function(teamId) {
   return "/api/teams/" + teamId + "/avatar";
@@ -732,4 +762,6 @@ $(function() {
       intro: transitionTimeoutToIntro,
     },
   }
+
+  initializeSlideshow()
 });

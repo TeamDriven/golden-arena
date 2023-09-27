@@ -29,6 +29,8 @@ type ArenaNotifiers struct {
 	RealtimeScoreNotifier              *websocket.Notifier
 	ReloadDisplaysNotifier             *websocket.Notifier
 	ScorePostedNotifier                *websocket.Notifier
+	FieldLightsNotifier                *websocket.Notifier
+	SCCNotifier                        *websocket.Notifier
 }
 
 type MatchTimeMessage struct {
@@ -60,6 +62,8 @@ func (arena *Arena) configureNotifiers() {
 	arena.RealtimeScoreNotifier = websocket.NewNotifier("realtimeScore", arena.generateRealtimeScoreMessage)
 	arena.ReloadDisplaysNotifier = websocket.NewNotifier("reload", nil)
 	arena.ScorePostedNotifier = websocket.NewNotifier("scorePosted", arena.generateScorePostedMessage)
+	arena.FieldLightsNotifier = websocket.NewNotifier("fieldLights", arena.generateFieldLightsMessage)
+	arena.SCCNotifier = websocket.NewNotifier("sccstatus", arena.generateSCCStatusMessage)
 }
 
 func (arena *Arena) generateAllianceSelectionMessage() interface{} {
@@ -81,18 +85,31 @@ func (arena *Arena) generateArenaStatusMessage() interface{} {
 		}
 	}
 
+	startMatchErr := arena.checkCanStartMatch()
+	startMatchErrString := ""
+	if startMatchErr != nil {
+		startMatchErrString = startMatchErr.Error()
+	}
 	return &struct {
 		MatchId          int
 		AllianceStations map[string]*AllianceStation
 		TeamWifiStatuses map[string]network.TeamWifiStatus
 		MatchState
 		CanStartMatch         bool
+		CanStartMatchReason   string
 		PlcIsHealthy          bool
 		FieldEstop            bool
 		PlcArmorBlockStatuses map[string]bool
+		ScoringSccConnected   bool
+		RedSccConnected       bool
+		BlueSccConnected      bool
 	}{arena.CurrentMatch.Id, arena.AllianceStations, teamWifiStatuses, arena.MatchState,
-		arena.checkCanStartMatch() == nil, arena.Plc.IsHealthy, arena.Plc.GetFieldEstop(),
-		arena.Plc.GetArmorBlockStatuses()}
+		startMatchErr == nil, startMatchErrString,
+		arena.Plc.IsHealthy, arena.Plc.GetFieldEstop(),
+		arena.Plc.GetArmorBlockStatuses(),
+		arena.Scc.IsSccConnected("scoring"),
+		arena.Scc.IsSccConnected("red"),
+		arena.Scc.IsSccConnected("blue")}
 }
 
 func (arena *Arena) generateAudienceDisplayModeMessage() interface{} {
@@ -190,6 +207,10 @@ func (arena *Arena) generateRealtimeScoreMessage() interface{} {
 	return &fields
 }
 
+func (arena *Arena) generateSCCStatusMessage() interface{} {
+	return arena.Scc.GenerateNotifierStatus()
+}
+
 func (arena *Arena) generateScorePostedMessage() interface{} {
 	// For elimination matches, summarize the state of the series.
 	var seriesStatus, seriesLeader string
@@ -221,6 +242,12 @@ func (arena *Arena) generateScorePostedMessage() interface{} {
 		seriesStatus,
 		seriesLeader,
 	}
+}
+
+func (arena *Arena) generateFieldLightsMessage() interface{} {
+	return &struct {
+		Lights string
+	}{arena.FieldLights.GetCurrentStateAsString()}
 }
 
 // Constructs the data object for one alliance sent to the audience display for the realtime scoring overlay.

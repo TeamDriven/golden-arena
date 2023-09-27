@@ -41,13 +41,13 @@ func TestDisplayFromUrl(t *testing.T) {
 	query["nickname"] = []string{"Test Nickname"}
 	query["key1"] = []string{"value1"}
 	query["key2"] = []string{"value2"}
-	query["color"] = []string{"%230f0"}
+	query["color"] = []string{"%23000"}
 	display, _ = DisplayFromUrl("/display/websocket", query)
 	assert.Equal(t, "Test Nickname", display.Nickname)
 	if assert.Equal(t, 3, len(display.Configuration)) {
 		assert.Equal(t, "value1", display.Configuration["key1"])
 		assert.Equal(t, "value2", display.Configuration["key2"])
-		assert.Equal(t, "#0f0", display.Configuration["color"])
+		assert.Equal(t, "#000", display.Configuration["color"])
 	}
 }
 

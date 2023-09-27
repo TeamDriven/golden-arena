@@ -25,6 +25,7 @@ const (
 	postTimeoutSec           = 4
 	preLoadNextMatchDelaySec = 5
 	earlyLateThresholdMin    = 2.5
+	sccConnectionTimeout     = 5.0
 	MaxMatchGapMin           = 20
 )
 
@@ -49,7 +50,10 @@ type Arena struct {
 	accessPoint      network.AccessPoint
 	accessPoint2     network.AccessPoint
 	networkSwitch    *network.Switch
+	dnsMasq          *network.DnsMasq
 	Plc              plc.Plc
+	FieldLights      *Lights
+	Scc              *SCC
 	TbaClient        *partner.TbaClient
 	AllianceStations map[string]*AllianceStation
 	Displays         map[string]*Display
@@ -126,6 +130,12 @@ func NewArena(dbPath string) (*Arena, error) {
 	arena.SavedMatchResult = model.NewMatchResult()
 	arena.AllianceStationDisplayMode = "match"
 
+	// Initialize field lights controller
+	arena.FieldLights = NewLights()
+
+	// Initialize SCC information
+	arena.Scc = NewSCC(arena)
+
 	return arena, nil
 }
 
@@ -143,6 +153,7 @@ func (arena *Arena) LoadSettings() error {
 	arena.accessPoint2.SetSettings(settings.Ap2Address, settings.Ap2Username, settings.Ap2Password,
 		settings.Ap2TeamChannel, 0, "", settings.NetworkSecurityEnabled)
 	arena.networkSwitch = network.NewSwitch(settings.SwitchAddress, settings.SwitchPassword)
+	arena.dnsMasq = network.NewDnsMasq()
 	arena.Plc.SetAddress(settings.PlcAddress)
 	arena.TbaClient = partner.NewTbaClient(settings.TbaEventCode, settings.TbaSecretId, settings.TbaSecret)
 
@@ -456,6 +467,7 @@ func (arena *Arena) Update() {
 			sendDsPacket = true
 		}
 		arena.Plc.ResetMatch()
+		arena.FieldLights.ResetWasAutoSet()
 	case WarmupPeriod:
 		auto = true
 		enabled = false
@@ -689,6 +701,9 @@ func (arena *Arena) setupNetwork(teams [6]*model.Team) {
 			if err := arena.networkSwitch.ConfigureTeamEthernet(teams); err != nil {
 				log.Printf("Failed to configure team Ethernet: %s", err.Error())
 			}
+			if err := arena.dnsMasq.ConfigureTeamEthernet(teams); err != nil {
+				log.Printf("Failed to configure dnsmasq: %s", err.Error())
+			}
 		}()
 	}
 }
@@ -700,6 +715,11 @@ func (arena *Arena) checkCanStartMatch() error {
 	}
 
 	err := arena.checkAllianceStationsReady("R1", "R2", "R3", "B1", "B2", "B3")
+	if err != nil {
+		return err
+	}
+
+	err = arena.checkSccEstops()
 	if err != nil {
 		return err
 	}
@@ -730,6 +750,28 @@ func (arena *Arena) checkAllianceStationsReady(stations ...string) error {
 		if !allianceStation.Bypass {
 			if allianceStation.DsConn == nil || !allianceStation.DsConn.RobotLinked {
 				return fmt.Errorf("Cannot start match until all robots are connected or bypassed.")
+			}
+			if station[0] == 'R' {
+				if !arena.Scc.IsSccConnected("red") {
+					return fmt.Errorf("Cannot start match without red alliance SCC connected")
+				}
+			} else if station[0] == 'B' {
+				if !arena.Scc.IsSccConnected("blue") {
+					return fmt.Errorf("Cannot start match without blue alliance SCC connected")
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
+func (arena *Arena) checkSccEstops() error {
+	for alliance, status := range arena.Scc.status {
+		for i := range status.EStops {
+			if status.EStops[i] {
+				return fmt.Errorf("Cannot start match with %s %d emergency stop active",
+					alliance, i+1)
 			}
 		}
 	}
@@ -815,6 +857,10 @@ func (arena *Arena) handlePlcOutput() {
 		// Turn off lights if all teams become ready.
 		if redAllianceReady && blueAllianceReady {
 			arena.Plc.SetFieldResetLight(false)
+			if arena.FieldLights.GetCurrentState() != LightsOff && !arena.FieldLights.GetWasAutoSet() {
+				arena.FieldLights.SetLightsOff(true)
+				arena.FieldLightsNotifier.Notify()
+			}
 		}
 	case PostMatch:
 		if arena.FieldReset {
@@ -835,14 +881,21 @@ func (arena *Arena) handlePlcOutput() {
 	}
 }
 
+func (arena *Arena) EstopClicked(station string) {
+	allianceStation := arena.AllianceStations[station]
+	if arena.MatchState == AutoPeriod {
+		allianceStation.Astop = true
+	}
+	allianceStation.Estop = true
+}
+
 func (arena *Arena) handleEstop(station string, state bool) {
 	allianceStation := arena.AllianceStations[station]
 	if state {
 		if arena.MatchState == AutoPeriod {
 			allianceStation.Astop = true
-		} else {
-			allianceStation.Estop = true
 		}
+		allianceStation.Estop = true
 	} else {
 		if arena.MatchState != AutoPeriod {
 			allianceStation.Astop = false

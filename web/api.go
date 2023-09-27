@@ -17,6 +17,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type MatchResultWithSummary struct {
@@ -102,6 +103,43 @@ func (web *Web) sponsorSlidesApiHandler(w http.ResponseWriter, r *http.Request) 
 		sponsors = make([]model.SponsorSlide, 0)
 	}
 	jsonData, err := json.MarshalIndent(sponsors, "", "  ")
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	_, err = w.Write(jsonData)
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+}
+
+// Generates a JSON dump of the slideshow slides for use by the audience display.
+func (web *Web) slideshowSlidesApiHandler(w http.ResponseWriter, r *http.Request) {
+	_, err := os.Stat("./static/img/slideshow")
+	if os.IsNotExist(err) {
+		if err := os.MkdirAll("./static/img/slideshow", os.ModePerm); err != nil {
+			handleWebErr(w, err)
+			return
+		}
+	}
+	entries, err := os.ReadDir("./static/img/slideshow")
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+
+	slides := make([]string, 0)
+	for i := 0; i < len(entries); i++ {
+		name := entries[i].Name()
+		if !strings.HasPrefix(name, ".") {
+			slides = append(slides, name)
+		}
+	}
+
+	jsonData, err := json.MarshalIndent(slides, "", "  ")
 	if err != nil {
 		handleWebErr(w, err)
 		return

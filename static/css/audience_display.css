@@ -467,8 +467,45 @@ html {
   background-color: #fff;
   text-align: center;
 }
-#sponsor .carousel-inner, #sponsor .item {
+#sponsor .carousel-inner, #sponsor .item, #slideshow .carousel-inner {
   height: 100%;
+}
+.slideshow-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+#slideshow img {
+  flex-shrink: 0;
+  min-width: 100%;
+  min-height: 100%;
+}
+/* https://stackoverflow.com/a/19244808 */
+.carousel-fade .carousel-inner .item {
+  opacity: 0;
+  -webkit-transition-property: opacity;
+  -moz-transition-property: opacity;
+  -o-transition-property: opacity;
+  transition-property: opacity;
+}
+.carousel-fade .carousel-inner .active {
+  opacity: 1;
+}
+.carousel-fade .carousel-inner .active.left,
+.carousel-fade .carousel-inner .active.right {
+  left: 0;
+  opacity: 0;
+  z-index: 1;
+}
+.carousel-fade .carousel-inner .next.left,
+.carousel-fade .carousel-inner .prev.right {
+  opacity: 1;
+}
+.carousel-fade .carousel-control {
+  z-index: 2;
 }
 .sponsor-image-container {
   width: 1000px;
@@ -481,10 +518,10 @@ html {
   margin: 0;
 }
 #sponsor h1 {
-  font-size: 60px;
+  font-size: 45px;
   background-color: #444;
   color: #fff;
-  padding: 0.25em;
+  padding: 0.5em;
   position: absolute;
   left: 0;
   bottom: 0;
@@ -492,9 +529,9 @@ html {
   height: 96px;
 }
 #sponsor h2 {
-  font-size: 6em;
-  padding-top: 145px;
-  line-height: 110px;
+  font-size: 3em;
+  padding-top: 85px;
+  line-height: 60px;
 }
 #sponsor img {
   max-width: 800px;
