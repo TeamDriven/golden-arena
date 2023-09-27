@@ -22,7 +22,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
           release_name: Crimson Arena ${{ github.ref }}
@@ -49,10 +49,10 @@ jobs:
       - name: Upload Linux bundle
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ env.LINUX_X64_FILENAME }}
+          asset_GITHUB_TOKENh: ./${{ env.LINUX_X64_FILENAME }}
           asset_name: ${{ env.LINUX_X64_FILENAME }}
           asset_content_type: application/zip
 
@@ -67,10 +67,10 @@ jobs:
       - name: Upload MacOS x64 bundle
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ env.MACOS_X64_FILENAME }}
+          asset_GITHUB_TOKENh: ./${{ env.MACOS_X64_FILENAME }}
           asset_name: ${{ env.MACOS_X64_FILENAME }}
           asset_content_type: application/zip
 
@@ -85,10 +85,10 @@ jobs:
       - name: Upload MacOS M1 bundle
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ env.MACOS_M1_FILENAME }}
+          asset_GITHUB_TOKENh: ./${{ env.MACOS_M1_FILENAME }}
           asset_name: ${{ env.MACOS_M1_FILENAME }}
           asset_content_type: application/zip
 
@@ -103,9 +103,9 @@ jobs:
       - name: Upload Windows bundle
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ env.WINDOWS_X64_FILENAME }}
+          asset_GITHUB_TOKENh: ./${{ env.WINDOWS_X64_FILENAME }}
           asset_name: ${{ env.WINDOWS_X64_FILENAME }}
           asset_content_type: application/zip
