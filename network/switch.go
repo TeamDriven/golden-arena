@@ -9,7 +9,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"github.com/FRCTeam1987Offseason/crimson-arena/model"
+	"github.com/FRCTeam1987/crimson-arena/model"
 	"net"
 	"regexp"
 	"strconv"

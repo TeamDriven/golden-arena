@@ -7,7 +7,7 @@ package web
 
 import (
 	"fmt"
-	"github.com/FRCTeam1987Offseason/crimson-arena/field"
+	"github.com/FRCTeam1987/crimson-arena/field"
 	"net/http"
 	"net/url"
 	"regexp"

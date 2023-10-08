@@ -6,7 +6,7 @@
 package model
 
 import (
-	"github.com/FRCTeam1987Offseason/crimson-arena/game"
+	"github.com/FRCTeam1987/crimson-arena/game"
 	"sort"
 )
 

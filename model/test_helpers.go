@@ -7,7 +7,7 @@ package model
 
 import (
 	"fmt"
-	"github.com/FRCTeam1987Offseason/crimson-arena/game"
+	"github.com/FRCTeam1987/crimson-arena/game"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"path/filepath"

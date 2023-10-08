@@ -7,7 +7,7 @@ package bracket
 
 import (
 	"fmt"
-	"github.com/FRCTeam1987Offseason/crimson-arena/model"
+	"github.com/FRCTeam1987/crimson-arena/model"
 	"sort"
 	"time"
 )

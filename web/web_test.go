@@ -4,9 +4,9 @@
 package web
 
 import (
-	"github.com/FRCTeam1987Offseason/crimson-arena/field"
-	"github.com/FRCTeam1987Offseason/crimson-arena/game"
-	"github.com/FRCTeam1987Offseason/crimson-arena/websocket"
+	"github.com/FRCTeam1987/crimson-arena/field"
+	"github.com/FRCTeam1987/crimson-arena/game"
+	"github.com/FRCTeam1987/crimson-arena/websocket"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"

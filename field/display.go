@@ -7,7 +7,7 @@ package field
 
 import (
 	"fmt"
-	"github.com/FRCTeam1987Offseason/crimson-arena/websocket"
+	"github.com/FRCTeam1987/crimson-arena/websocket"
 	"net/url"
 	"reflect"
 	"sort"

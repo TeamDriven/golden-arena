@@ -11,7 +11,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/FRCTeam1987Offseason/crimson-arena/model"
+	"github.com/FRCTeam1987/crimson-arena/model"
 	"io/ioutil"
 	"net/http"
 	"strconv"

@@ -7,7 +7,7 @@ package web
 
 import (
 	"fmt"
-	"github.com/FRCTeam1987Offseason/crimson-arena/model"
+	"github.com/FRCTeam1987/crimson-arena/model"
 	"io"
 	"io/ioutil"
 	"net/http"

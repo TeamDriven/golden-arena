@@ -5,9 +5,9 @@ package web
 
 import (
 	"fmt"
-	"github.com/FRCTeam1987Offseason/crimson-arena/game"
-	"github.com/FRCTeam1987Offseason/crimson-arena/model"
-	"github.com/FRCTeam1987Offseason/crimson-arena/tournament"
+	"github.com/FRCTeam1987/crimson-arena/game"
+	"github.com/FRCTeam1987/crimson-arena/model"
+	"github.com/FRCTeam1987/crimson-arena/tournament"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

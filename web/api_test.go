@@ -5,10 +5,10 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/FRCTeam1987Offseason/crimson-arena/game"
-	"github.com/FRCTeam1987Offseason/crimson-arena/model"
-	"github.com/FRCTeam1987Offseason/crimson-arena/tournament"
-	"github.com/FRCTeam1987Offseason/crimson-arena/websocket"
+	"github.com/FRCTeam1987/crimson-arena/game"
+	"github.com/FRCTeam1987/crimson-arena/model"
+	"github.com/FRCTeam1987/crimson-arena/tournament"
+	"github.com/FRCTeam1987/crimson-arena/websocket"
 	gorillawebsocket "github.com/gorilla/websocket"
 	"github.com/stretchr/testify/assert"
 	"testing"

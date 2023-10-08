@@ -7,9 +7,9 @@ package field
 
 import (
 	"fmt"
-	"github.com/FRCTeam1987Offseason/crimson-arena/game"
-	"github.com/FRCTeam1987Offseason/crimson-arena/model"
-	"github.com/FRCTeam1987Offseason/crimson-arena/network"
+	"github.com/FRCTeam1987/crimson-arena/game"
+	"github.com/FRCTeam1987/crimson-arena/model"
+	"github.com/FRCTeam1987/crimson-arena/network"
 	"log"
 	"net"
 	"regexp"

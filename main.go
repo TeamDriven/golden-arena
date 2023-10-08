@@ -7,8 +7,8 @@
 package main
 
 import (
-	"github.com/FRCTeam1987Offseason/crimson-arena/field"
-	"github.com/FRCTeam1987Offseason/crimson-arena/web"
+	"github.com/FRCTeam1987/crimson-arena/field"
+	"github.com/FRCTeam1987/crimson-arena/web"
 	"log"
 )
 

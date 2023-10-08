@@ -4,7 +4,7 @@
 package model
 
 import (
-	"github.com/FRCTeam1987Offseason/crimson-arena/game"
+	"github.com/FRCTeam1987/crimson-arena/game"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

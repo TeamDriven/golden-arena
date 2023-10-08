@@ -1,4 +1,4 @@
-Crimson Arena [![Build Status](https://github.com/FRCTeam1987Offseason/crimson-arena/actions/workflows/test.yml/badge.svg)](https://github.com/FRCTeam1987Offseason/crimson-arena/actions)
+Crimson Arena [![Build Status](https://github.com/FRCTeam1987/crimson-arena/actions/workflows/test.yml/badge.svg)](https://github.com/FRCTeam1987/crimson-arena/actions)
 ============
 Fork of [Cheesy Arena Lite](https://github.com/Team254/cheesy-arena-lite), a game-agnostic field management system that just works.
 

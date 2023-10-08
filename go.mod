@@ -1,4 +1,4 @@
-module github.com/FRCTeam1987Offseason/crimson-arena
+module github.com/FRCTeam1987/crimson-arena
 
 go 1.18
 
