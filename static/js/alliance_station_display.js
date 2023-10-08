@@ -109,11 +109,10 @@ var handleMatchTime = function(data) {
       // Pin the state for a non-alliance display to an in-match state, so as to always show time or score.
       matchState = "TELEOP_PERIOD";
     }
-    var countdownString = String(countdownSec % 60);
-    if (countdownString.length === 1) {
-      countdownString = "0" + countdownString;
+    var countdownString = String(countdownSec);
+    while (countdownString.length < 3) {
+      countdownString = "-" + countdownString;
     }
-    countdownString = Math.floor(countdownSec / 60) + ":" + countdownString;
     $("#timeRemaining").text(countdownString);
     $("#match").attr("data-state", matchState);
   });
