@@ -1,6 +1,6 @@
 module github.com/FRCTeam1987/crimson-arena
 
-go 1.18
+go 1.22
 
 require (
 	github.com/dchest/uniuri v1.2.0
