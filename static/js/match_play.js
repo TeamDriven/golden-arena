@@ -179,8 +179,8 @@ var handleArenaStatus = function(data) {
         $("#matchStartReason").html(data.CanStartMatchReason);
       }
       $("#abortMatch").prop("disabled", true);
-      $("#signalVolunteers").prop("disabled", true);
-      $("#signalReset").prop("disabled", true);
+      $("#signalVolunteers").prop("disabled", false);
+      $("#signalReset").prop("disabled", false);
       $("#commitResults").prop("disabled", true);
       $("#discardResults").prop("disabled", true);
       $("#editResults").prop("disabled", true);

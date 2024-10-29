@@ -95,8 +95,8 @@ type TbaEvent struct {
 }
 
 type TbaMediaItem struct {
-	Details map[string]interface{} `json:"details"`
-	Type    string                 `json:"type"`
+	Details map[string]any `json:"details"`
+	Type    string         `json:"type"`
 }
 
 type TbaPublishedAward struct {

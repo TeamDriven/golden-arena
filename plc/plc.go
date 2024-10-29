@@ -336,7 +336,7 @@ func (plc *Plc) writeCoils() bool {
 	return true
 }
 
-func (plc *Plc) generateIoChangeMessage() interface{} {
+func (plc *Plc) generateIoChangeMessage() any {
 	return &struct {
 		Inputs    []bool
 		Registers []uint16
