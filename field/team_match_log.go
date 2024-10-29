@@ -38,7 +38,7 @@ func NewTeamMatchLog(teamId int, match *model.Match, wifiStatus *network.TeamWif
 	}
 
 	log := TeamMatchLog{log.New(logFile, "", 0), logFile, wifiStatus}
-	log.logger.Println("matchTimeSec,packetType,teamId,allianceStation,dsLinked,radioLinked,robotLinked,auto,enabled," +
+	log.logger.Println("matchTimeSec,packetType,teamId,allianceStation,dsLinked,radioLinked,rioLinked,robotLinked,auto,enabled," +
 		"emergencyStop,batteryVoltage,missedPacketCount,dsRobotTripTimeMs,rxRate,txRate,signalNoiseRatio")
 
 	return &log, nil
@@ -54,6 +54,7 @@ func (log *TeamMatchLog) LogDsPacket(matchTimeSec float64, packetType int, dsCon
 		dsConn.AllianceStation,
 		dsConn.DsLinked,
 		dsConn.RadioLinked,
+		dsConn.RioLinked,
 		dsConn.RobotLinked,
 		dsConn.Auto,
 		dsConn.Enabled,
