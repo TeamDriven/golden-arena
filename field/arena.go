@@ -84,28 +84,19 @@ type Arena struct {
 }
 
 type AllianceStation struct {
-	DsConn   *DriverStationConnection
-	Ethernet bool
-	Astop    bool
-	Estop    bool
-	Bypass   bool
-	Team     *model.Team
+	DsConn     *DriverStationConnection
+	Ethernet   bool
+	Astop      bool
+	Estop      bool
+	Bypass     bool
+	Team       *model.Team
+	WifiStatus network.TeamWifiStatus
 }
 
 // Creates the arena and sets it to its initial state.
 func NewArena(dbPath string) (*Arena, error) {
 	arena := new(Arena)
 	arena.configureNotifiers()
-
-	var err error
-	arena.Database, err = model.OpenDatabase(dbPath)
-	if err != nil {
-		return nil, err
-	}
-	err = arena.LoadSettings()
-	if err != nil {
-		return nil, err
-	}
 
 	arena.AllianceStations = make(map[string]*AllianceStation)
 	arena.AllianceStations["R1"] = new(AllianceStation)
@@ -116,6 +107,16 @@ func NewArena(dbPath string) (*Arena, error) {
 	arena.AllianceStations["B3"] = new(AllianceStation)
 
 	arena.Displays = make(map[string]*Display)
+
+	var err error
+	arena.Database, err = model.OpenDatabase(dbPath)
+	if err != nil {
+		return nil, err
+	}
+	err = arena.LoadSettings()
+	if err != nil {
+		return nil, err
+	}
 
 	// Load empty match as current.
 	arena.MatchState = PreMatch
@@ -147,6 +148,35 @@ func (arena *Arena) LoadSettings() error {
 	arena.EventSettings = settings
 
 	// Initialize the components that depend on settings.
+	var accessPoint1WifiStatuses, accessPoint2WifiStatuses [6]*network.TeamWifiStatus
+	if arena.EventSettings.Ap2TeamChannel == 0 {
+		accessPoint1WifiStatuses = [6]*network.TeamWifiStatus{
+			&arena.AllianceStations["R1"].WifiStatus,
+			&arena.AllianceStations["R2"].WifiStatus,
+			&arena.AllianceStations["R3"].WifiStatus,
+			&arena.AllianceStations["B1"].WifiStatus,
+			&arena.AllianceStations["B2"].WifiStatus,
+			&arena.AllianceStations["B3"].WifiStatus,
+		}
+	} else {
+		accessPoint1WifiStatuses = [6]*network.TeamWifiStatus{
+			&arena.AllianceStations["R1"].WifiStatus,
+			&arena.AllianceStations["R2"].WifiStatus,
+			&arena.AllianceStations["R3"].WifiStatus,
+			nil,
+			nil,
+			nil,
+		}
+		accessPoint2WifiStatuses = [6]*network.TeamWifiStatus{
+			nil,
+			nil,
+			nil,
+			&arena.AllianceStations["B1"].WifiStatus,
+			&arena.AllianceStations["B2"].WifiStatus,
+			&arena.AllianceStations["B3"].WifiStatus,
+		}
+	}
+
 	arena.accessPoint.SetSettings(
 		settings.ApType == "vivid",
 		settings.ApAddress,
@@ -154,6 +184,7 @@ func (arena *Arena) LoadSettings() error {
 		settings.ApPassword,
 		settings.ApTeamChannel,
 		settings.NetworkSecurityEnabled,
+		accessPoint1WifiStatuses,
 	)
 	arena.accessPoint2.SetSettings(
 		settings.ApType == "vivid",
@@ -162,6 +193,7 @@ func (arena *Arena) LoadSettings() error {
 		settings.Ap2Password,
 		settings.Ap2TeamChannel,
 		settings.NetworkSecurityEnabled,
+		accessPoint2WifiStatuses,
 	)
 	arena.networkSwitch = network.NewSwitch(settings.SwitchAddress, settings.SwitchPassword)
 	arena.dnsMasq = network.NewDnsMasq()
@@ -342,20 +374,10 @@ func (arena *Arena) StartMatch() error {
 		}
 		arena.updateCycleTime(arena.CurrentMatch.StartedAt)
 
-		// Convert AP team wifi network status array to a map by station for ease of client use.
-		teamWifiStatuses := make(map[string]*network.TeamWifiStatus)
-		for i, station := range []string{"R1", "R2", "R3", "B1", "B2", "B3"} {
-			if arena.EventSettings.Ap2TeamChannel == 0 || i < 3 {
-				teamWifiStatuses[station] = &arena.accessPoint.TeamWifiStatuses[i]
-			} else {
-				teamWifiStatuses[station] = &arena.accessPoint2.TeamWifiStatuses[i]
-			}
-		}
-
 		// Save the missed packet count to subtract it from the running count.
-		for station, allianceStation := range arena.AllianceStations {
+		for _, allianceStation := range arena.AllianceStations {
 			if allianceStation.DsConn != nil {
-				err = allianceStation.DsConn.signalMatchStart(arena.CurrentMatch, teamWifiStatuses[station])
+				err = allianceStation.DsConn.signalMatchStart(arena.CurrentMatch, &allianceStation.WifiStatus)
 				if err != nil {
 					log.Println(err)
 				}

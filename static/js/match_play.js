@@ -113,7 +113,7 @@ var handleArenaStatus = function(data) {
 
   // Update the team status view.
   $.each(data.AllianceStations, function(station, stationStatus) {
-    var wifiStatus = data.TeamWifiStatuses[station];
+    var wifiStatus = stationStatus.WifiStatus;
     $("#status" + station + " .radio-status").text(wifiStatus.TeamId);
 
     if (stationStatus.DsConn) {
