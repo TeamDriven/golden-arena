@@ -59,7 +59,7 @@ func TestArenaCheckCanStartMatch(t *testing.T) {
 	// Check robot state constraints.
 	err := arena.checkCanStartMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot start match until all robots are connected or bypassed")
+		assert.Contains(t, err.Error(), "cannot start match until all robots are connected or bypassed")
 	}
 	arena.AllianceStations["R1"].Bypass = true
 	arena.AllianceStations["R2"].Bypass = true
@@ -68,7 +68,7 @@ func TestArenaCheckCanStartMatch(t *testing.T) {
 	arena.AllianceStations["B2"].Bypass = true
 	err = arena.checkCanStartMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot start match until all robots are connected or bypassed")
+		assert.Contains(t, err.Error(), "cannot start match until all robots are connected or bypassed")
 	}
 	arena.AllianceStations["B3"].Bypass = true
 	assert.Nil(t, arena.checkCanStartMatch())
@@ -77,7 +77,7 @@ func TestArenaCheckCanStartMatch(t *testing.T) {
 	arena.Plc.SetAddress("1.2.3.4")
 	err = arena.checkCanStartMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot start match while PLC is not healthy")
+		assert.Contains(t, err.Error(), "cannot start match while PLC is not healthy")
 	}
 	arena.Plc.SetAddress("")
 	assert.Nil(t, arena.checkCanStartMatch())
@@ -216,73 +216,73 @@ func TestArenaStateEnforcement(t *testing.T) {
 	assert.Nil(t, err)
 	err = arena.AbortMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot abort match when")
+		assert.Contains(t, err.Error(), "cannot abort match when")
 	}
 	err = arena.StartMatch()
 	assert.Nil(t, err)
 	err = arena.LoadMatch(new(model.Match))
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot load match while")
+		assert.Contains(t, err.Error(), "cannot load match while")
 	}
 	err = arena.StartMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot start match while")
+		assert.Contains(t, err.Error(), "cannot start match while")
 	}
 	err = arena.ResetMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot reset match while")
+		assert.Contains(t, err.Error(), "cannot reset match while")
 	}
 	arena.MatchState = AutoPeriod
 	err = arena.LoadMatch(new(model.Match))
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot load match while")
+		assert.Contains(t, err.Error(), "cannot load match while")
 	}
 	err = arena.StartMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot start match while")
+		assert.Contains(t, err.Error(), "cannot start match while")
 	}
 	err = arena.ResetMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot reset match while")
+		assert.Contains(t, err.Error(), "cannot reset match while")
 	}
 	arena.MatchState = PausePeriod
 	err = arena.LoadMatch(new(model.Match))
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot load match while")
+		assert.Contains(t, err.Error(), "cannot load match while")
 	}
 	err = arena.StartMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot start match while")
+		assert.Contains(t, err.Error(), "cannot start match while")
 	}
 	err = arena.ResetMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot reset match while")
+		assert.Contains(t, err.Error(), "cannot reset match while")
 	}
 	arena.MatchState = TeleopPeriod
 	err = arena.LoadMatch(new(model.Match))
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot load match while")
+		assert.Contains(t, err.Error(), "cannot load match while")
 	}
 	err = arena.StartMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot start match while")
+		assert.Contains(t, err.Error(), "cannot start match while")
 	}
 	err = arena.ResetMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot reset match while")
+		assert.Contains(t, err.Error(), "cannot reset match while")
 	}
 	arena.MatchState = PostMatch
 	err = arena.LoadMatch(new(model.Match))
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot load match while")
+		assert.Contains(t, err.Error(), "cannot load match while")
 	}
 	err = arena.StartMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot start match while")
+		assert.Contains(t, err.Error(), "cannot start match while")
 	}
 	err = arena.AbortMatch()
 	if assert.NotNil(t, err) {
-		assert.Contains(t, err.Error(), "Cannot abort match when")
+		assert.Contains(t, err.Error(), "cannot abort match when")
 	}
 
 	err = arena.ResetMatch()

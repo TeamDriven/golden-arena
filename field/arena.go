@@ -195,7 +195,7 @@ func (arena *Arena) CreatePlayoffBracket() error {
 	case "double":
 		arena.PlayoffBracket, err = bracket.NewDoubleEliminationBracket(arena.EventSettings.NumElimAlliances)
 	default:
-		err = fmt.Errorf("Invalid playoff type: %v", arena.EventSettings.ElimType)
+		err = fmt.Errorf("invalid playoff type: %v", arena.EventSettings.ElimType)
 	}
 	return err
 }
@@ -216,7 +216,7 @@ func (arena *Arena) UpdatePlayoffBracket(startTime *time.Time) error {
 // Sets up the arena for the given match.
 func (arena *Arena) LoadMatch(match *model.Match) error {
 	if arena.MatchState != PreMatch {
-		return fmt.Errorf("Cannot load match while there is a match still in progress or with results pending.")
+		return fmt.Errorf("cannot load match while there is a match still in progress or with results pending")
 	}
 
 	arena.CurrentMatch = match
@@ -286,7 +286,7 @@ func (arena *Arena) LoadNextMatch() error {
 // Assigns the given team to the given station, also substituting it into the match record.
 func (arena *Arena) SubstituteTeam(teamId int, station string) error {
 	if !arena.CurrentMatch.ShouldAllowSubstitution() {
-		return fmt.Errorf("Can't substitute teams for qualification matches.")
+		return fmt.Errorf("can't substitute teams for qualification matches")
 	}
 	err := arena.assignTeam(teamId, station)
 	if err != nil {
@@ -353,7 +353,7 @@ func (arena *Arena) StartMatch() error {
 // Kills the current match or timeout if it is underway.
 func (arena *Arena) AbortMatch() error {
 	if arena.MatchState == PreMatch || arena.MatchState == PostMatch || arena.MatchState == PostTimeout {
-		return fmt.Errorf("Cannot abort match when it is not in progress.")
+		return fmt.Errorf("cannot abort match when it is not in progress")
 	}
 
 	if arena.MatchState == TimeoutActive {
@@ -377,7 +377,7 @@ func (arena *Arena) AbortMatch() error {
 // Clears out the match and resets the arena state unless there is a match underway.
 func (arena *Arena) ResetMatch() error {
 	if arena.MatchState != PostMatch && arena.MatchState != PreMatch {
-		return fmt.Errorf("Cannot reset match while it is in progress.")
+		return fmt.Errorf("cannot reset match while it is in progress")
 	}
 	arena.MatchState = PreMatch
 	arena.matchAborted = false
@@ -394,7 +394,7 @@ func (arena *Arena) ResetMatch() error {
 // Starts a timeout of the given duration.
 func (arena *Arena) StartTimeout(durationSec int) error {
 	if arena.MatchState != PreMatch {
-		return fmt.Errorf("Cannot start timeout while there is a match still in progress or with results pending.")
+		return fmt.Errorf("cannot start timeout while there is a match still in progress or with results pending")
 	}
 
 	game.MatchTiming.TimeoutDurationSec = durationSec
@@ -600,7 +600,7 @@ func (arena *Arena) BlueScoreSummary() *game.ScoreSummary {
 func (arena *Arena) assignTeam(teamId int, station string) error {
 	// Reject invalid station values.
 	if _, ok := arena.AllianceStations[station]; !ok {
-		return fmt.Errorf("Invalid alliance station '%s'.", station)
+		return fmt.Errorf("invalid alliance station '%s'", station)
 	}
 
 	// Do nothing if the station is already assigned to the requested team.
@@ -714,7 +714,7 @@ func (arena *Arena) setupNetwork(teams [6]*model.Team) {
 // Returns nil if the match can be started, and an error otherwise.
 func (arena *Arena) checkCanStartMatch() error {
 	if arena.MatchState != PreMatch {
-		return fmt.Errorf("Cannot start match while there is a match still in progress or with results pending.")
+		return fmt.Errorf("cannot start match while there is a match still in progress or with results pending")
 	}
 
 	err := arena.checkAllianceStationsReady("R1", "R2", "R3", "B1", "B2", "B3")
@@ -729,14 +729,14 @@ func (arena *Arena) checkCanStartMatch() error {
 
 	if arena.Plc.IsEnabled() {
 		if !arena.Plc.IsHealthy {
-			return fmt.Errorf("Cannot start match while PLC is not healthy.")
+			return fmt.Errorf("cannot start match while PLC is not healthy")
 		}
 		if arena.Plc.GetFieldEstop() {
-			return fmt.Errorf("Cannot start match while field emergency stop is active.")
+			return fmt.Errorf("cannot start match while field emergency stop is active")
 		}
 		for name, status := range arena.Plc.GetArmorBlockStatuses() {
 			if !status {
-				return fmt.Errorf("Cannot start match while PLC ArmorBlock '%s' is not connected.", name)
+				return fmt.Errorf("cannot start match while PLC ArmorBlock '%s' is not connected", name)
 			}
 		}
 	}
@@ -748,19 +748,19 @@ func (arena *Arena) checkAllianceStationsReady(stations ...string) error {
 	for _, station := range stations {
 		allianceStation := arena.AllianceStations[station]
 		if allianceStation.Estop {
-			return fmt.Errorf("Cannot start match while an emergency stop is active.")
+			return fmt.Errorf("cannot start match while an emergency stop is active")
 		}
 		if !allianceStation.Bypass {
 			if allianceStation.DsConn == nil || !allianceStation.DsConn.RobotLinked {
-				return fmt.Errorf("Cannot start match until all robots are connected or bypassed.")
+				return fmt.Errorf("cannot start match until all robots are connected or bypassed")
 			}
 			if station[0] == 'R' {
 				if !arena.Scc.IsSccConnected("red") {
-					return fmt.Errorf("Cannot start match without red alliance SCC connected")
+					return fmt.Errorf("cannot start match without red alliance SCC connected")
 				}
 			} else if station[0] == 'B' {
 				if !arena.Scc.IsSccConnected("blue") {
-					return fmt.Errorf("Cannot start match without blue alliance SCC connected")
+					return fmt.Errorf("cannot start match without blue alliance SCC connected")
 				}
 			}
 		}
@@ -773,7 +773,7 @@ func (arena *Arena) checkSccEstops() error {
 	for alliance, status := range arena.Scc.status {
 		for i := range status.EStops {
 			if status.EStops[i] {
-				return fmt.Errorf("Cannot start match with %s %d emergency stop active",
+				return fmt.Errorf("cannot start match with %s %d emergency stop active",
 					alliance, i+1)
 			}
 		}
@@ -840,6 +840,9 @@ func (arena *Arena) handlePlcInput() {
 
 // Updates the PLC's coils based on its inputs and the current scoring state.
 func (arena *Arena) handlePlcOutput() {
+	redAllianceReady := arena.checkAllianceStationsReady("R1", "R2", "R3") == nil
+	blueAllianceReady := arena.checkAllianceStationsReady("B1", "B2", "B3") == nil
+
 	switch arena.MatchState {
 	case PreMatch:
 		if arena.lastMatchState != PreMatch {
@@ -851,8 +854,6 @@ func (arena *Arena) handlePlcOutput() {
 	case PostTimeout:
 		// Set the stack light state -- solid alliance color(s) if robots are not connected, solid orange if scores are
 		// not input, or blinking green if ready.
-		redAllianceReady := arena.checkAllianceStationsReady("R1", "R2", "R3") == nil
-		blueAllianceReady := arena.checkAllianceStationsReady("B1", "B2", "B3") == nil
 		greenStackLight := redAllianceReady && blueAllianceReady && arena.Plc.GetCycleState(2, 0, 2)
 		arena.Plc.SetStackLights(!redAllianceReady, !blueAllianceReady, false, greenStackLight)
 		arena.Plc.SetStackBuzzer(redAllianceReady && blueAllianceReady)
@@ -877,10 +878,13 @@ func (arena *Arena) handlePlcOutput() {
 			}()
 		}
 	case AutoPeriod:
+		arena.Plc.SetStackBuzzer(false)
+		arena.Plc.SetStackLights(!redAllianceReady, !blueAllianceReady, false, true)
 		fallthrough
 	case PausePeriod:
 		fallthrough
 	case TeleopPeriod:
+		arena.Plc.SetStackLights(!redAllianceReady, !blueAllianceReady, false, true)
 	}
 }
 
