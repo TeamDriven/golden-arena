@@ -14,6 +14,7 @@ import (
 	"github.com/FRCTeam1987/crimson-arena/partner"
 	"github.com/FRCTeam1987/crimson-arena/plc"
 	"log"
+	"reflect"
 	"time"
 )
 
@@ -81,6 +82,7 @@ type Arena struct {
 	MuteMatchSounds            bool
 	matchAborted               bool
 	soundsPlayed               map[*game.MatchSound]struct{}
+	preloadedTeams             *[6]*model.Team
 }
 
 type AllianceStation struct {
@@ -292,9 +294,17 @@ func (arena *Arena) LoadMatch(match *model.Match) error {
 		return err
 	}
 
-	arena.setupNetwork([6]*model.Team{arena.AllianceStations["R1"].Team, arena.AllianceStations["R2"].Team,
-		arena.AllianceStations["R3"].Team, arena.AllianceStations["B1"].Team, arena.AllianceStations["B2"].Team,
-		arena.AllianceStations["B3"].Team})
+	arena.setupNetwork(
+		[6]*model.Team{
+			arena.AllianceStations["R1"].Team,
+			arena.AllianceStations["R2"].Team,
+			arena.AllianceStations["R3"].Team,
+			arena.AllianceStations["B1"].Team,
+			arena.AllianceStations["B2"].Team,
+			arena.AllianceStations["B3"].Team,
+		},
+		false,
+	)
 
 	// Reset the arena state and game scores.
 	arena.soundsPlayed = make(map[*game.MatchSound]struct{})
@@ -352,9 +362,17 @@ func (arena *Arena) SubstituteTeam(teamId int, station string) error {
 	case "B3":
 		arena.CurrentMatch.Blue3 = teamId
 	}
-	arena.setupNetwork([6]*model.Team{arena.AllianceStations["R1"].Team, arena.AllianceStations["R2"].Team,
-		arena.AllianceStations["R3"].Team, arena.AllianceStations["B1"].Team, arena.AllianceStations["B2"].Team,
-		arena.AllianceStations["B3"].Team})
+	arena.setupNetwork(
+		[6]*model.Team{
+			arena.AllianceStations["R1"].Team,
+			arena.AllianceStations["R2"].Team,
+			arena.AllianceStations["R3"].Team,
+			arena.AllianceStations["B1"].Team,
+			arena.AllianceStations["B2"].Team,
+			arena.AllianceStations["B3"].Team,
+		},
+		false,
+	)
 	arena.MatchLoadNotifier.Notify()
 
 	if arena.CurrentMatch.Type != "test" {
@@ -724,11 +742,22 @@ func (arena *Arena) preLoadNextMatch() {
 			log.Printf("Failed to get model for Team %d while pre-loading next match: %s", teamId, err.Error())
 		}
 	}
-	arena.setupNetwork(teams)
+	arena.setupNetwork(teams, true)
 }
 
 // Asynchronously reconfigures the networking hardware for the new set of teams.
-func (arena *Arena) setupNetwork(teams [6]*model.Team) {
+func (arena *Arena) setupNetwork(teams [6]*model.Team, isPreload bool) {
+	if isPreload {
+		arena.preloadedTeams = &teams
+	} else if arena.preloadedTeams != nil {
+		preloadedTeams := *arena.preloadedTeams
+		arena.preloadedTeams = nil
+		if reflect.DeepEqual(teams, preloadedTeams) {
+			// Skip configuring the network; this is the same set of teams that was preloaded.
+			return
+		}
+	}
+
 	if arena.EventSettings.NetworkSecurityEnabled {
 		if arena.EventSettings.Ap2TeamChannel == 0 {
 			// Only one AP is being used.
