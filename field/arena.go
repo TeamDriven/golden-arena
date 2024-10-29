@@ -148,6 +148,7 @@ func (arena *Arena) LoadSettings() error {
 
 	// Initialize the components that depend on settings.
 	arena.accessPoint.SetSettings(
+		settings.ApType == "vivid",
 		settings.ApAddress,
 		settings.ApUsername,
 		settings.ApPassword,
@@ -155,6 +156,7 @@ func (arena *Arena) LoadSettings() error {
 		settings.NetworkSecurityEnabled,
 	)
 	arena.accessPoint2.SetSettings(
+		settings.ApType == "vivid",
 		settings.Ap2Address,
 		settings.Ap2Username,
 		settings.Ap2Password,
