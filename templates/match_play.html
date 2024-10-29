@@ -196,13 +196,20 @@
               </div>
             </div>
           </div>
-        {{if .PlcIsEnabled}}
-          <p>PLC Status</p>
+        {{if .EventSettings.NetworkSecurityEnabled}}
+          <h6>Network Status</h6>
           <p>
-            <span class="label label-scoring" id="plcStatus"></span><br />
-            <span class="label label-scoring" id="fieldEstop">E-Stop</span>
+            <span class="label label-status" id="accessPointStatus">Access Point</span><br />
+            <span class="label label-status" id="switchStatus">Switch</span>
+          </p>
+        {{end}}
+        {{if .PlcIsEnabled}}
+          <h6>PLC Status</h6>
+          <p>
+            <span class="label label-scoring" id="plcStatus"></span>
+            <span class="label label-scoring" id="fieldEstop">E-Stop</span><br />
             {{range $name, $status := .PlcArmorBlockStatuses}}
-              <br /><span class="label label-scoring" id="plc{{$name}}Status">{{$name}}</span>
+              <span class="label label-scoring" id="plc{{$name}}Status">{{$name}}</span>
             {{end}}
           </p>
         {{end}}

@@ -79,6 +79,8 @@ func (arena *Arena) generateArenaStatusMessage() any {
 		AllianceStations map[string]*AllianceStation
 		MatchState
 		CanStartMatch         bool
+		AccessPointStatus     string
+		SwitchStart           string
 		PlcIsHealthy          bool
 		FieldEstop            bool
 		PlcArmorBlockStatuses map[string]bool
@@ -90,6 +92,8 @@ func (arena *Arena) generateArenaStatusMessage() any {
 		arena.AllianceStations,
 		arena.MatchState,
 		arena.checkCanStartMatch() == nil,
+		arena.accessPoint.Status,
+		arena.networkSwitch.Status,
 		arena.Plc.IsHealthy,
 		arena.Plc.GetFieldEstop(),
 		arena.Plc.GetArmorBlockStatuses(),

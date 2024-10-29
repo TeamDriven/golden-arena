@@ -88,6 +88,18 @@
 .label-scoring[data-ready=true] {
   background-color: #0c6;
 }
+.label-status {
+  background-color: #e66;
+}
+.label-status[data-status=BOOTING] {
+  background-color: #f92;
+}
+.label-status[data-status=CONFIGURING] {
+  background-color: #08f;
+}
+.label-status[data-status=ACTIVE] {
+  background-color: #0c6;
+}
 .label-saved-match {
   background-color: #999;
 }
