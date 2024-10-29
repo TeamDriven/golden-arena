@@ -12,6 +12,13 @@ zip -r -X crimson-arena.linux.x64.zip crimson-arena
 rm -rf crimson-arena/
 go clean
 mkdir crimson-arena
+GOOS=linux GOARCH=arm64 go build -o crimson-arena/
+cp -r $ASSET_FILES crimson-arena/
+zip -r -X crimson-arena.linux.arm64.zip crimson-arena
+
+rm -rf crimson-arena/
+go clean
+mkdir crimson-arena
 GOOS=darwin GOARCH=amd64 go build -o crimson-arena/
 cp -r $ASSET_FILES crimson-arena/
 zip -r -X crimson-arena.macos.x64.zip crimson-arena
