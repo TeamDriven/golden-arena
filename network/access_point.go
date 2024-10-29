@@ -30,6 +30,7 @@ const (
 var accessPointInfoLines = []string{"ESSID: ", "Mode: ", "Tx-Power: ", "Signal: ", "Bit Rate: "}
 
 type AccessPoint struct {
+	apNumber               int
 	isVividType            bool
 	address                string
 	username               string
@@ -56,12 +57,14 @@ type sshOutput struct {
 }
 
 func (ap *AccessPoint) SetSettings(
+	apNumber int,
 	isVividType bool,
 	address, username, password string,
 	teamChannel int,
 	networkSecurityEnabled bool,
 	wifiStatuses [6]*TeamWifiStatus,
 ) {
+	ap.apNumber = apNumber
 	ap.isVividType = isVividType
 	ap.address = address
 	ap.username = username
@@ -144,15 +147,15 @@ func (ap *AccessPoint) configureTeams(teams [6]*model.Team) {
 		for teamIndex < 6 {
 			config, err := ap.generateTeamAccessPointConfig(teams[teamIndex], teamIndex+1)
 			if err != nil {
-				log.Printf("Failed to generate WiFi configuration: %v", err)
+				log.Printf("Failed to generate WiFi configuration for AP %d: %v", ap.apNumber, err)
 			}
 
 			command := addConfigurationHeader(config)
-			log.Printf("Configuring access point with command: %s\n", command)
+			log.Printf("Configuring AP %d with command: %s\n", ap.apNumber, command)
 
 			_, err = ap.runCommand(command)
 			if err != nil {
-				log.Printf("Error writing team configuration to AP: %v", err)
+				log.Printf("Error writing team configuration to AP %d: %v", ap.apNumber, err)
 				retryCount++
 				time.Sleep(time.Second * accessPointConfigRetryIntervalSec)
 				continue
@@ -170,10 +173,12 @@ func (ap *AccessPoint) configureTeams(teams [6]*model.Team) {
 		}
 		err := ap.updateTeamWifiStatuses()
 		if err == nil && ap.configIsCorrectForTeams(teams) {
-			log.Printf("Successfully configured WiFi after %d attempts.", retryCount)
+			log.Printf("Successfully configured AP %d Wi-Fi after %d attempts.", ap.apNumber, retryCount)
 			break
 		}
-		log.Printf("WiFi configuration still incorrect after %d attempts; trying again.", retryCount)
+		log.Printf(
+			"WiFi configuration still incorrect on AP %d after %d attempts; trying again.", ap.apNumber, retryCount,
+		)
 	}
 }
 
@@ -208,7 +213,7 @@ func (ap *AccessPoint) updateTeamWifiStatuses() error {
 
 	output, err := ap.runCommand("iwinfo")
 	if err == nil {
-		logWifiInfo(output)
+		ap.logWifiInfo(output)
 		err = ap.decodeWifiInfo(output)
 	}
 
@@ -290,7 +295,7 @@ func (ap *AccessPoint) generateTeamAccessPointConfig(team *model.Team, position 
 }
 
 // Filters the given output from the "iwiinfo" command on the AP and logs the relevant parts.
-func logWifiInfo(wifiInfo string) {
+func (ap *AccessPoint) logWifiInfo(wifiInfo string) {
 	lines := strings.Split(wifiInfo, "\n")
 	var filteredLines []string
 	for _, line := range lines {
@@ -301,7 +306,7 @@ func logWifiInfo(wifiInfo string) {
 			}
 		}
 	}
-	log.Printf("Access point status:\n%s\n", strings.Join(filteredLines, "\n"))
+	log.Printf("AP %d status:\n%s\n", ap.apNumber, strings.Join(filteredLines, "\n"))
 }
 
 // Parses the given output from the "iwinfo" command on the AP and updates the given status structure with the result.
