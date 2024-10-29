@@ -20,15 +20,9 @@ type EventSettings struct {
 	TbaSecretId                 string
 	TbaSecret                   string
 	NetworkSecurityEnabled      bool
-	ApType                      string
 	ApAddress                   string
-	ApUsername                  string
 	ApPassword                  string
-	ApTeamChannel               int
-	Ap2Address                  string
-	Ap2Username                 string
-	Ap2Password                 string
-	Ap2TeamChannel              int
+	ApChannel                   int
 	SwitchAddress               string
 	SwitchPassword              string
 	PlcAddress                  string
@@ -57,9 +51,7 @@ func (database *Database) GetEventSettings() (*EventSettings, error) {
 		SelectionRound2Order:        "L",
 		SelectionRound3Order:        "",
 		TBADownloadEnabled:          true,
-		ApType:                      "linksys",
-		ApTeamChannel:               157,
-		Ap2TeamChannel:              0,
+		ApChannel:                   36,
 		WarmupDurationSec:           game.MatchTiming.WarmupDurationSec,
 		AutoDurationSec:             game.MatchTiming.AutoDurationSec,
 		PauseDurationSec:            game.MatchTiming.PauseDurationSec,
