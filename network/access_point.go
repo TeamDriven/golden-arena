@@ -85,6 +85,23 @@ func (ap *AccessPoint) Run() {
 	}
 }
 
+// Calls the access point to configure the non-team-related settings.
+func (ap *AccessPoint) ConfigureAdminSettings() error {
+	if !ap.networkSecurityEnabled {
+		return nil
+	}
+
+	var device string
+	if ap.isVividType {
+		device = "wifi1"
+	} else {
+		device = "radio0"
+	}
+	command := fmt.Sprintf("uci set wireless.%s.channel=%d && uci commit wireless", device, ap.teamChannel)
+	_, err := ap.runCommand(command)
+	return err
+}
+
 // Adds a request to set up wireless networks for the given set of teams to the asynchronous queue.
 func (ap *AccessPoint) ConfigureTeamWifi(teams [6]*model.Team) error {
 	// Use a channel to serialize configuration requests; the monitoring goroutine will service them.
@@ -288,13 +305,13 @@ func (ap *AccessPoint) updateTeamWifiBTU() error {
 
 	var infWifi []string
 	if ap.isVividType {
-		infWifi = []string{"1", "11", "12", "13", "14", "15"}
+		infWifi = []string{"ath1", "ath11", "ath12", "ath13", "ath14", "ath15"}
 	} else {
-		infWifi = []string{"0", "0-1", "0-2", "0-3", "0-4", "0-5"}
+		infWifi = []string{"wlan0", "wlan0-1", "wlan0-2", "wlan0-3", "wlan0-4", "wlan0-5"}
 	}
 
 	for i := range ap.TeamWifiStatuses {
-		output, err := ap.runCommand(fmt.Sprintf("luci-bwc -i ath%s", infWifi[i]))
+		output, err := ap.runCommand(fmt.Sprintf("luci-bwc -i %s", infWifi[i]))
 		if err == nil {
 			btu := parseBtu(output)
 			ap.TeamWifiStatuses[i].MBits = btu

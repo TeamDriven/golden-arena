@@ -175,6 +175,11 @@ func (arena *Arena) LoadSettings() error {
 		if err = arena.accessPoint2.ConfigureAdminSettings(); err != nil {
 			log.Printf("Failed to configure second access point admin settings: %s", err.Error())
 		}
+		if arena.EventSettings.Ap2TeamChannel != 0 {
+			if err = arena.accessPoint2.ConfigureAdminSettings(); err != nil {
+				log.Printf("Failed to configure second access point admin settings: %s", err.Error())
+			}
+		}
 	}
 
 	game.MatchTiming.WarmupDurationSec = settings.WarmupDurationSec
