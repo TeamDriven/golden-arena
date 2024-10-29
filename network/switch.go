@@ -14,9 +14,14 @@ import (
 	"regexp"
 	"strconv"
 	"sync"
+	"time"
 )
 
-const switchTelnetPort = 23
+const (
+	switchConfigBackoffDurationSec = 5
+	switchTeamGatewayAddress       = 4
+	switchTelnetPort               = 23
+)
 
 const (
 	red1Vlan  = 10
@@ -28,16 +33,22 @@ const (
 )
 
 type Switch struct {
-	address  string
-	port     int
-	password string
-	mutex    sync.Mutex
+	address               string
+	port                  int
+	password              string
+	mutex                 sync.Mutex
+	configBackoffDuration time.Duration
 }
 
 var ServerIpAddress = "10.0.100.5" // The DS will try to connect to this address only.
 
 func NewSwitch(address, password string) *Switch {
-	return &Switch{address: address, port: switchTelnetPort, password: password}
+	return &Switch{
+		address:               address,
+		port:                  switchTelnetPort,
+		password:              password,
+		configBackoffDuration: switchConfigBackoffDurationSec * time.Second,
+	}
 }
 
 // Sets up wired networks for the given set of teams.
@@ -59,13 +70,13 @@ func (sw *Switch) ConfigureTeamEthernet(teams [6]*model.Team) error {
 		if oldTeamVlans[team.Id] == vlan {
 			delete(oldTeamVlans, team.Id)
 		} else {
+			teamPartialIp := fmt.Sprintf("%d.%d", team.Id/100, team.Id%100)
 			addTeamVlansCommand += fmt.Sprintf(
 				"no access-list 1%d\n"+
-					"access-list 1%d permit ip 10.%d.%d.0 0.0.0.255 host %s\n"+
+					"access-list 1%d permit ip 10.%s.0 0.0.0.255 host %s\n"+
 					"access-list 1%d permit udp any eq bootpc any eq bootps\n"+
-					"interface Vlan%d\nip address 10.%d.%d.61 255.255.255.0\n",
-				vlan, vlan, team.Id/100, team.Id%100, ServerIpAddress, vlan, vlan, team.Id/100,
-				team.Id%100)
+					"interface Vlan%d\nip address 10.%s.%d 255.255.255.0\n",
+				vlan, vlan, teamPartialIp, ServerIpAddress, vlan, vlan, teamPartialIp, switchTeamGatewayAddress)
 		}
 	}
 	replaceTeamVlan(teams[0], red1Vlan)
@@ -90,6 +101,9 @@ func (sw *Switch) ConfigureTeamEthernet(teams [6]*model.Team) error {
 		}
 	}
 
+	// Give some time for the configuration to take before another one can be attempted.
+	time.Sleep(sw.configBackoffDuration)
+
 	return nil
 }
 
@@ -102,7 +116,9 @@ func (sw *Switch) getTeamVlans() (map[int]int, error) {
 	}
 
 	// Parse out the team IDs and VLANs from the config dump.
-	re := regexp.MustCompile("(?s)interface Vlan(\\d\\d)\\s+ip address 10\\.(\\d+)\\.(\\d+)\\.61")
+	re := regexp.MustCompile(
+		fmt.Sprintf("(?s)interface Vlan(\\d\\d)\\s+ip address 10\\.(\\d+)\\.(\\d+)\\.%d", switchTeamGatewayAddress),
+	)
 	teamVlanMatches := re.FindAllStringSubmatch(config, -1)
 	if teamVlanMatches == nil {
 		// There are probably no teams currently configured.
