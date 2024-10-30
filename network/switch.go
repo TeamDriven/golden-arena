@@ -82,8 +82,9 @@ func (sw *Switch) ConfigureTeamEthernet(teams [6]*model.Team) error {
 			"no access-list 1%d\n"+
 				"access-list 1%d permit ip 10.%s.0 0.0.0.255 host %s\n"+
 				"access-list 1%d permit udp any eq bootpc any eq bootps\n"+
+				"access-list 1%d permit icmp any any\n"+
 				"interface Vlan%d\nip address 10.%s.%d 255.255.255.0\n",
-			vlan, vlan, teamPartialIp, ServerIpAddress, vlan, vlan, teamPartialIp, switchTeamGatewayAddress)
+			vlan, vlan, teamPartialIp, ServerIpAddress, vlan, vlan, vlan, teamPartialIp, switchTeamGatewayAddress)
 	}
 	addTeamVlan(teams[0], red1Vlan)
 	addTeamVlan(teams[1], red2Vlan)
