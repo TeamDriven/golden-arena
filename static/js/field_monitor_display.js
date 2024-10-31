@@ -41,6 +41,8 @@ var handleArenaStatus = function(data) {
           status = "wrong-station";
         } else if (stationStatus.DsConn.RobotLinked) {
           status = "robot-linked";
+        } else if (stationStatus.DsConn.RioLinked) {
+          status = "rio-linked";
         } else if (stationStatus.DsConn.RadioLinked) {
           status = "radio-linked";
         } else if (stationStatus.DsConn.DsLinked) {
@@ -65,7 +67,7 @@ var handleArenaStatus = function(data) {
       teamEthernetElement.text("ETH");
     }
 
-    var wifiStatus = data.TeamWifiStatuses[station];
+    const wifiStatus = stationStatus.WifiStatus;
     teamRadioTextElement.text(wifiStatus.TeamId);
 
     if (stationStatus.DsConn) {
@@ -75,7 +77,8 @@ var handleArenaStatus = function(data) {
       teamDsElement.text(dsConn.MissedPacketCount);
 
       // Format the radio status box according to the connection status of the robot radio.
-      var radioOkay = stationStatus.Team && stationStatus.Team.Id === wifiStatus.TeamId && wifiStatus.RadioLinked;
+      var radioOkay = stationStatus.Team && stationStatus.Team.Id === wifiStatus.TeamId &&
+          (wifiStatus.RadioLinked || dsConn.RobotLinked);
       teamRadioElement.attr("data-status-ok", radioOkay);
 
       // Format the robot status box.

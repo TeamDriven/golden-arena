@@ -44,14 +44,15 @@ func (dm *DnsMasq) ConfigureTeamEthernet(teams [6]*model.Team) error {
 		if oldTeamVlans[team.Id] == vlan {
 			delete(oldTeamVlans, team.Id)
 		} else {
+			teamPartialIp := fmt.Sprintf("%d.%d", team.Id/100, team.Id%100)
 			contents := []byte(fmt.Sprintf(
 				"# Options for VLAN%d\n"+
 					"# Team %d\n"+
 					"\n"+
-					"dhcp-range=set:vlan%d,10.%d.%d.101,10.%d.%d.199,255.255.255.0,12h\n"+
-					"dhcp-option=tag:vlan%d,3,10.%d.%d.61\n",
-				vlan, team.Id, vlan, team.Id/100, team.Id%100, team.Id/100, team.Id%100,
-				vlan, team.Id/100, team.Id%100))
+					"dhcp-range=set:vlan%d,10.%s.20,10.%s.199,255.255.255.0,12h\n"+
+					"dhcp-option=tag:vlan%d,3,10.%s.4\n",
+				vlan, team.Id, vlan, teamPartialIp, teamPartialIp,
+				vlan, teamPartialIp))
 			err := ioutil.WriteFile(fmt.Sprintf("/etc/dnsmasq.d/vlan%d.conf", vlan), contents, 0664)
 			if err != nil {
 				log.Printf("Failed to configure VLAN%d for team %d: %s", vlan, team.Id, err.Error())

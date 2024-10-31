@@ -227,12 +227,12 @@ func TestMatchPlayWebsocketCommands(t *testing.T) {
 	// Test match setup commands.
 	ws.Write("substituteTeam", nil)
 	assert.Contains(t, readWebsocketError(t, ws), "Invalid alliance station")
-	ws.Write("substituteTeam", map[string]interface{}{"team": 254, "position": "B5"})
+	ws.Write("substituteTeam", map[string]any{"team": 254, "position": "B5"})
 	assert.Contains(t, readWebsocketError(t, ws), "Invalid alliance station")
-	ws.Write("substituteTeam", map[string]interface{}{"team": 254, "position": "B1"})
+	ws.Write("substituteTeam", map[string]any{"team": 254, "position": "B1"})
 	readWebsocketType(t, ws, "arenaStatus")
 	assert.Equal(t, 254, web.arena.CurrentMatch.Blue1)
-	ws.Write("substituteTeam", map[string]interface{}{"team": 0, "position": "B1"})
+	ws.Write("substituteTeam", map[string]any{"team": 0, "position": "B1"})
 	readWebsocketType(t, ws, "arenaStatus")
 	assert.Equal(t, 0, web.arena.CurrentMatch.Blue1)
 	ws.Write("toggleBypass", nil)
@@ -270,7 +270,7 @@ func TestMatchPlayWebsocketCommands(t *testing.T) {
 	readWebsocketType(t, ws, "audienceDisplayMode")
 	readWebsocketType(t, ws, "allianceStationDisplayMode")
 	assert.Equal(t, field.PostMatch, web.arena.MatchState)
-	ws.Write("updateRealtimeScore", map[string]interface{}{
+	ws.Write("updateRealtimeScore", map[string]any{
 		"blueAuto":    10,
 		"redAuto":     20,
 		"blueTeleop":  30,
@@ -379,7 +379,7 @@ func readWebsocketStatusMatchTime(t *testing.T, ws *websocket.Websocket) (bool, 
 	return getStatusMatchTime(t, readWebsocketMultiple(t, ws, 2))
 }
 
-func getStatusMatchTime(t *testing.T, messages map[string]interface{}) (bool, field.MatchTimeMessage) {
+func getStatusMatchTime(t *testing.T, messages map[string]any) (bool, field.MatchTimeMessage) {
 	_, statusReceived := messages["arenaStatus"]
 	message, ok := messages["matchTime"]
 	var matchTime field.MatchTimeMessage

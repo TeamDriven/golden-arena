@@ -28,11 +28,6 @@ var abortMatch = function() {
   websocket.send("abortMatch");
 };
 
-// Sends a websocket message to signal to the volunteers that they may enter the field.
-var signalVolunteers = function() {
-  websocket.send("signalVolunteers");
-};
-
 // Sends a websocket message to signal to the teams that they may enter the field.
 var signalReset = function() {
   websocket.send("signalReset");
@@ -118,17 +113,13 @@ var handleArenaStatus = function(data) {
 
   // Update the team status view.
   $.each(data.AllianceStations, function(station, stationStatus) {
-    var wifiStatus = data.TeamWifiStatuses[station];
+    var wifiStatus = stationStatus.WifiStatus;
     $("#status" + station + " .radio-status").text(wifiStatus.TeamId);
 
     if (stationStatus.DsConn) {
       // Format the driver station status box.
       var dsConn = stationStatus.DsConn;
       $("#status" + station + " .ds-status").attr("data-status-ok", dsConn.DsLinked);
-
-      // Format the radio status box according to the connection status of the robot radio.
-      var radioOkay = stationStatus.Team && stationStatus.Team.Id === wifiStatus.TeamId && wifiStatus.RadioLinked;
-      $("#status" + station + " .radio-status").attr("data-status-ok", radioOkay);
 
       // Format the robot status box.
       var robotOkay = dsConn.BatteryVoltage > lowBatteryThreshold && dsConn.RobotLinked;
@@ -142,19 +133,20 @@ var handleArenaStatus = function(data) {
       $("#status" + station + " .ds-status").attr("data-status-ok", "");
       $("#status" + station + " .robot-status").attr("data-status-ok", "");
       $("#status" + station + " .robot-status").text("");
+    }
 
-      // Format the robot status box according to whether the AP is configured with the correct SSID.
-      var expectedTeamId = stationStatus.Team ? stationStatus.Team.Id : 0;
-      if (wifiStatus.TeamId === expectedTeamId) {
-        if (wifiStatus.RadioLinked) {
-          $("#status" + station + " .radio-status").attr("data-status-ok", true);
-        } else {
-          $("#status" + station + " .radio-status").attr("data-status-ok", "");
-        }
+    // Format the radio status box according to whether the AP is configured with the correct SSID and the connection
+    // status of the robot radio.
+    const expectedTeamId = stationStatus.Team ? stationStatus.Team.Id : 0;
+    let radioStatus = 0;
+    if (expectedTeamId === wifiStatus.TeamId) {
+      if (wifiStatus.RadioLinked || stationStatus.DsConn?.RobotLinked) {
+        radioStatus = 2;
       } else {
-        $("#status" + station + " .radio-status").attr("data-status-ok", false);
+        radioStatus = 1;
       }
     }
+    $(`#status${station} .radio-status`).attr("data-status-ternary", radioStatus);
 
     if (stationStatus.Estop) {
       $("#status" + station + " .bypass-status").attr("data-status-ok", false);
@@ -179,8 +171,7 @@ var handleArenaStatus = function(data) {
         $("#matchStartReason").html(data.CanStartMatchReason);
       }
       $("#abortMatch").prop("disabled", true);
-      $("#signalVolunteers").prop("disabled", true);
-      $("#signalReset").prop("disabled", true);
+      $("#signalReset").prop("disabled", false);
       $("#commitResults").prop("disabled", true);
       $("#discardResults").prop("disabled", true);
       $("#editResults").prop("disabled", true);
@@ -205,7 +196,6 @@ var handleArenaStatus = function(data) {
     case "TELEOP_PERIOD":
       $("#startMatch").prop("disabled", true);
       $("#abortMatch").prop("disabled", false);
-      $("#signalVolunteers").prop("disabled", true);
       $("#signalReset").prop("disabled", true);
       $("#commitResults").prop("disabled", true);
       $("#discardResults").prop("disabled", true);
@@ -221,7 +211,6 @@ var handleArenaStatus = function(data) {
     case "POST_MATCH":
       $("#startMatch").prop("disabled", true);
       $("#abortMatch").prop("disabled", true);
-      $("#signalVolunteers").prop("disabled", false);
       $("#signalReset").prop("disabled", false);
       $("#commitResults").prop("disabled", false);
       $("#discardResults").prop("disabled", false);
@@ -237,7 +226,6 @@ var handleArenaStatus = function(data) {
     case "TIMEOUT_ACTIVE":
       $("#startMatch").prop("disabled", true);
       $("#abortMatch").prop("disabled", false);
-      $("#signalVolunteers").prop("disabled", true);
       $("#signalReset").prop("disabled", true);
       $("#commitResults").prop("disabled", true);
       $("#discardResults").prop("disabled", true);
@@ -253,7 +241,6 @@ var handleArenaStatus = function(data) {
     case "POST_TIMEOUT":
       $("#startMatch").prop("disabled", true);
       $("#abortMatch").prop("disabled", true);
-      $("#signalVolunteers").prop("disabled", true);
       $("#signalReset").prop("disabled", true);
       $("#commitResults").prop("disabled", true);
       $("#discardResults").prop("disabled", true);
@@ -267,6 +254,9 @@ var handleArenaStatus = function(data) {
       $("#redEndgameScore").prop("disabled", false);
       break;
   }
+
+  $("#accessPointStatus").attr("data-status", data.AccessPointStatus);
+  $("#switchStatus").attr("data-status", data.SwitchStatus);
 
   if (data.PlcIsHealthy) {
     $("#plcStatus").text("Connected");
