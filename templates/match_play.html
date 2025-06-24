@@ -136,7 +136,6 @@
         </button>
       </a>
     </div>
-    <div id="matchStartReason" class="alert alert-danger"></div>
     <br />
     <div class="row">
       <div class="col-lg-12 well">
@@ -200,7 +199,7 @@
           <h6>Network Status</h6>
           <p>
             <span class="label label-status" id="accessPointStatus">Access Point</span><br />
-            <span class="label label-status" id="switchStatus">Switch</span>
+            <span class="label label-status" id="switchStatus" style="display:none">Switch</span>
           </p>
         {{end}}
         {{if .PlcIsEnabled}}
@@ -213,6 +212,7 @@
             {{end}}
           </p>
         {{end}}
+        <h6>SCC Status</h6>
         <div class="row">
           <div class="col-lg-3 col-lg-offset-1">
             <div class="scc-indicator" id="blueSccStatus">B</div>

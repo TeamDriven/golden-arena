@@ -164,12 +164,6 @@ var handleArenaStatus = function(data) {
   switch (matchStates[data.MatchState]) {
     case "PRE_MATCH":
       $("#startMatch").prop("disabled", !data.CanStartMatch);
-      if (data.CanStartMatchReason.length < 1) {
-        $("#matchStartReason").hide();
-      } else {
-        $("#matchStartReason").show();
-        $("#matchStartReason").html(data.CanStartMatchReason);
-      }
       $("#abortMatch").prop("disabled", true);
       $("#signalReset").prop("disabled", false);
       $("#commitResults").prop("disabled", true);
@@ -256,7 +250,6 @@ var handleArenaStatus = function(data) {
   }
 
   $("#accessPointStatus").attr("data-status", data.AccessPointStatus);
-  $("#switchStatus").attr("data-status", data.SwitchStatus);
 
   if (data.PlcIsHealthy) {
     $("#plcStatus").text("Connected");
