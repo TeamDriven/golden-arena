@@ -199,6 +199,8 @@ func (web *Web) newHandler() http.Handler {
 	router.HandleFunc("/setup/teams/generate_wpa_keys", web.teamsGenerateWpaKeysHandler).Methods("GET")
 	router.HandleFunc("/setup/teams/publish", web.teamsPublishHandler).Methods("POST")
 	router.HandleFunc("/setup/teams/refresh", web.teamsRefreshHandler).Methods("GET")
+
+	router.HandleFunc("/api/allianceStatus", web.allianceStatusApiHandler).Methods("GET")
 	return router
 }
 

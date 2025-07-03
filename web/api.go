@@ -349,3 +349,28 @@ func (web *Web) generateBracketSvg(w io.Writer, activeMatch *model.Match, showTe
 	}{bracketType, matchups, showTemporaryConnectors}
 	return template.ExecuteTemplate(w, "bracket", data)
 }
+
+// Credit: https://github.com/justfishin1999/freezy-arena-dev/blob/a2ffc036c6738d5404dd4b856adc8f0c93b1643c/web/api.go#L339-L361
+// Generates a JSON dump of the arenaStatus, primarily for use by the stack Lights.
+func (web *Web) allianceStatusApiHandler(w http.ResponseWriter, _ *http.Request) {
+	// Preload the JSON as a string
+	var allianceStations = web.arena.AllianceStations
+
+	// Iterate through the slice of AllianceStation structs
+	for i := range allianceStations {
+		// If the struct has a Team field, remove or clear it
+		allianceStations[i].Team = nil // Remove Team information
+	}
+	jsonData, err := json.Marshal(allianceStations)
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	_, err = w.Write(jsonData)
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+}
