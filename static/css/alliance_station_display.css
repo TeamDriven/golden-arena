@@ -181,3 +181,9 @@ body[data-position=right] #inMatch #blueScore {
   font-family: "FuturaLT", sans-serif;
   font-size: 50px;
 }
+#accessPointStatus {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+}

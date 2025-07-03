@@ -33,6 +33,11 @@
       <img id="logoImg" src="/static/img/frc-logo.png" alt="logo" />
     </div>
     <div id="fieldReset" class="mode"><div>FIELD<br />RESET</div></div>
+    {{if .EventSettings.NetworkSecurityEnabled}}
+    <p>
+      <span class="label label-status" id="accessPointStatus">Access Point</span>
+    </p>
+    {{end}}
     <script src="/static/js/lib/jquery.min.js"></script>
     <script src="/static/js/lib/jquery.json-2.4.min.js"></script>
     <script src="/static/js/lib/jquery.websocket-0.0.1.js"></script>

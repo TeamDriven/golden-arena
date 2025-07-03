@@ -76,6 +76,8 @@ var handleMatchLoad = function(data) {
 
 // Handles a websocket message to update the team connection status.
 var handleArenaStatus = function(data) {
+  $("#accessPointStatus").attr("data-status", data.AccessPointStatus);
+
   stationStatus = data.AllianceStations[station];
   var blink = false;
   if (stationStatus && stationStatus.Bypass) {
