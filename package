@@ -2,6 +2,7 @@
 set -e
 ASSET_FILES="LICENSE README.md access_point_config.tar.gz fix_avatar_colors_for_overlay font schedules static switch_config.txt templates tunnel"
 
+echo "Building Crimson Arena for Linux x64..."
 rm -rf crimson-arena*
 go clean
 mkdir crimson-arena
@@ -9,6 +10,7 @@ GOOS=linux GOARCH=amd64 go build -o crimson-arena/
 cp -r $ASSET_FILES crimson-arena/
 zip -r -X crimson-arena.linux.x64.zip crimson-arena
 
+echo "Building Crimson Arena for Linux ARM..."
 rm -rf crimson-arena/
 go clean
 mkdir crimson-arena
@@ -16,6 +18,7 @@ GOOS=linux GOARCH=arm64 go build -o crimson-arena/
 cp -r $ASSET_FILES crimson-arena/
 zip -r -X crimson-arena.linux.arm64.zip crimson-arena
 
+echo "Building Crimson Arena for macOS Intel..."
 rm -rf crimson-arena/
 go clean
 mkdir crimson-arena
@@ -23,6 +26,7 @@ GOOS=darwin GOARCH=amd64 go build -o crimson-arena/
 cp -r $ASSET_FILES crimson-arena/
 zip -r -X crimson-arena.macos.x64.zip crimson-arena
 
+echo "Building Crimson Arena for macOS M1..."
 rm -rf crimson-arena/
 go clean
 mkdir crimson-arena
@@ -30,9 +34,12 @@ GOOS=darwin GOARCH=arm64 go build -o crimson-arena/
 cp -r $ASSET_FILES crimson-arena/
 zip -r -X crimson-arena.macos.m1.zip crimson-arena
 
+echo "Building Crimson Arena for Windows..."
 rm -rf crimson-arena/
 go clean
 mkdir crimson-arena
 GOOS=windows GOARCH=amd64 go build -o crimson-arena/
 cp -r $ASSET_FILES crimson-arena/
 zip -r -X crimson-arena.windows.x64.zip crimson-arena
+
+echo "Done"
