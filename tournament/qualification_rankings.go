@@ -6,8 +6,8 @@
 package tournament
 
 import (
-	"github.com/FRCTeam1987/crimson-arena/game"
-	"github.com/FRCTeam1987/crimson-arena/model"
+	"github.com/TeamDriven/golden-arena/game"
+	"github.com/TeamDriven/golden-arena/model"
 	"sort"
 )
 

@@ -8,7 +8,7 @@ package web
 import (
 	"bytes"
 	"fmt"
-	"github.com/FRCTeam1987/crimson-arena/model"
+	"github.com/TeamDriven/golden-arena/model"
 	"github.com/dchest/uniuri"
 	"github.com/gorilla/mux"
 	"net/http"

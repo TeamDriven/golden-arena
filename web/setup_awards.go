@@ -6,8 +6,8 @@
 package web
 
 import (
-	"github.com/FRCTeam1987/crimson-arena/model"
-	"github.com/FRCTeam1987/crimson-arena/tournament"
+	"github.com/TeamDriven/golden-arena/model"
+	"github.com/TeamDriven/golden-arena/tournament"
 	"net/http"
 	"strconv"
 )

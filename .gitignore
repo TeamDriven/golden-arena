@@ -2,8 +2,8 @@
 *.o
 *.a
 *.so
-crimson-arena
-crimson-arena*.zip
+golden-arena
+golden-arena*.zip
 
 # Folders
 _obj

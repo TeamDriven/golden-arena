@@ -7,12 +7,12 @@ package field
 
 import (
 	"fmt"
-	"github.com/FRCTeam1987/crimson-arena/bracket"
-	"github.com/FRCTeam1987/crimson-arena/game"
-	"github.com/FRCTeam1987/crimson-arena/model"
-	"github.com/FRCTeam1987/crimson-arena/network"
-	"github.com/FRCTeam1987/crimson-arena/partner"
-	"github.com/FRCTeam1987/crimson-arena/plc"
+	"github.com/TeamDriven/golden-arena/bracket"
+	"github.com/TeamDriven/golden-arena/game"
+	"github.com/TeamDriven/golden-arena/model"
+	"github.com/TeamDriven/golden-arena/network"
+	"github.com/TeamDriven/golden-arena/partner"
+	"github.com/TeamDriven/golden-arena/plc"
 	"log"
 	"reflect"
 	"time"

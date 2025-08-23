@@ -4,8 +4,8 @@
 package web
 
 import (
-	"github.com/FRCTeam1987/crimson-arena/field"
-	"github.com/FRCTeam1987/crimson-arena/websocket"
+	"github.com/TeamDriven/golden-arena/field"
+	"github.com/TeamDriven/golden-arena/websocket"
 	gorillawebsocket "github.com/gorilla/websocket"
 	"github.com/mitchellh/mapstructure"
 	"github.com/stretchr/testify/assert"

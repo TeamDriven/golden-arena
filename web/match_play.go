@@ -7,12 +7,12 @@ package web
 
 import (
 	"fmt"
-	"github.com/FRCTeam1987/crimson-arena/bracket"
-	"github.com/FRCTeam1987/crimson-arena/field"
-	"github.com/FRCTeam1987/crimson-arena/game"
-	"github.com/FRCTeam1987/crimson-arena/model"
-	"github.com/FRCTeam1987/crimson-arena/tournament"
-	"github.com/FRCTeam1987/crimson-arena/websocket"
+	"github.com/TeamDriven/golden-arena/bracket"
+	"github.com/TeamDriven/golden-arena/field"
+	"github.com/TeamDriven/golden-arena/game"
+	"github.com/TeamDriven/golden-arena/model"
+	"github.com/TeamDriven/golden-arena/tournament"
+	"github.com/TeamDriven/golden-arena/websocket"
 	"github.com/gorilla/mux"
 	"github.com/mitchellh/mapstructure"
 	"io"

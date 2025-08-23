@@ -7,8 +7,8 @@
 package main
 
 import (
-	"github.com/FRCTeam1987/crimson-arena/field"
-	"github.com/FRCTeam1987/crimson-arena/web"
+	"github.com/TeamDriven/golden-arena/field"
+	"github.com/TeamDriven/golden-arena/web"
 	"log"
 )
 

@@ -9,7 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/FRCTeam1987/crimson-arena/model"
+	"github.com/TeamDriven/golden-arena/model"
 	"github.com/stretchr/testify/assert"
 )
 

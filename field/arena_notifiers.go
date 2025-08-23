@@ -6,10 +6,10 @@
 package field
 
 import (
-	"github.com/FRCTeam1987/crimson-arena/bracket"
-	"github.com/FRCTeam1987/crimson-arena/game"
-	"github.com/FRCTeam1987/crimson-arena/model"
-	"github.com/FRCTeam1987/crimson-arena/websocket"
+	"github.com/TeamDriven/golden-arena/bracket"
+	"github.com/TeamDriven/golden-arena/game"
+	"github.com/TeamDriven/golden-arena/model"
+	"github.com/TeamDriven/golden-arena/websocket"
 	"strconv"
 )
 

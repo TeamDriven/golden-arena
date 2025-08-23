@@ -1,4 +1,4 @@
-module github.com/FRCTeam1987/crimson-arena
+module github.com/TeamDriven/golden-arena
 
 go 1.22
 
